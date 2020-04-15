@@ -1,0 +1,25 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "C/C++: g++.exe build active file",
+			"command": "C:\\MinGW\\bin\\g++.exe",
+			"args": [
+				"-g",
+				"-I${workspaceFolder}\\include\\eigen",
+				"${file}", "C:\\Users\\Aigars\\Desktop\\CPP\\KD\\EulerBernoulli.cpp",
+				"-o",
+				"${fileDirname}\\${fileBasenameNoExtension}.exe",
+			],
+			"options": {
+				"cwd": "C:\\MinGW\\bin"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		}
+		
+	]
+}

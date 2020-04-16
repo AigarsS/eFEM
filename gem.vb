@@ -1,134 +1,134 @@
 
-Sub sijaGEM()
+' Sub sijaGEM()
 
-    skaitsL = Range("A8").Value
-    skaitsS = Cells(11 + skaitsL, 1).Value
-    I = Cells(19 + skaitsL + skaitsS, 13).Value
-    E = Cells(20 + skaitsL + skaitsS, 13).Value
+'     skaitsL = Range("A8").Value
+'     skaitsS = Cells(11 + skaitsL, 1).Value
+'     I = Cells(19 + skaitsL + skaitsS, 13).Value
+'     E = Cells(20 + skaitsL + skaitsS, 13).Value
     
-    ReDim l_e(1 To skaitsL * 10 + 1)
-    ReDim F_x(1 To skaitsS)
+'     ReDim l_e(1 To skaitsL * 10 + 1)
+'     ReDim F_x(1 To skaitsS)
     
-    'Nolasa x koordinātu punktiem, kas sadala pa laidumiem
-    l_e(1) = 0
-    For m = 1 To skaitsL
-        l_e(10 * m - 8) = 1 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
-        l_e(10 * m - 7) = 2 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
-        l_e(10 * m - 6) = 3 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
-        l_e(10 * m - 5) = 4 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
-        l_e(10 * m - 4) = 5 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
-        l_e(10 * m - 3) = 6 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
-        l_e(10 * m - 2) = 7 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
-        l_e(10 * m - 1) = 8 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
-        l_e(10 * m) = 9 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
-        l_e(10 * m + 1) = Cells(8 + m, 13).Value + l_e(10 * m - 9)
-    Next m
+'     'Nolasa x koordinātu punktiem, kas sadala pa laidumiem
+'     l_e(1) = 0
+'     For m = 1 To skaitsL
+'         l_e(10 * m - 8) = 1 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
+'         l_e(10 * m - 7) = 2 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
+'         l_e(10 * m - 6) = 3 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
+'         l_e(10 * m - 5) = 4 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
+'         l_e(10 * m - 4) = 5 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
+'         l_e(10 * m - 3) = 6 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
+'         l_e(10 * m - 2) = 7 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
+'         l_e(10 * m - 1) = 8 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
+'         l_e(10 * m) = 9 * Cells(8 + m, 13).Value / 10 + l_e(10 * m - 9)
+'         l_e(10 * m + 1) = Cells(8 + m, 13).Value + l_e(10 * m - 9)
+'     Next m
 
-    'Nolasa x koordinātu punktiem, kuros pieliktas slodzes
-    n = 0
-    For m = 1 To skaitsS
-        slodzesTips = Cells(12 + skaitsL + m, 4).Value
-        Select Case slodzesTips
-            Case "Punktveida"
-                F_x(m) = Cells(12 + skaitsL + m, 10).Value
-            Case "Linijveida"
-                F_x(m) = Cells(12 + skaitsL + m, 10).Value
-                n = n + 1
-                ReDim Preserve F_x(1 To skaitsS + n)
-                F_x(skaitsS + n) = Cells(12 + skaitsL + m, 13).Value
-        End Select
-    Next m
+'     'Nolasa x koordinātu punktiem, kuros pieliktas slodzes
+'     n = 0
+'     For m = 1 To skaitsS
+'         slodzesTips = Cells(12 + skaitsL + m, 4).Value
+'         Select Case slodzesTips
+'             Case "Punktveida"
+'                 F_x(m) = Cells(12 + skaitsL + m, 10).Value
+'             Case "Linijveida"
+'                 F_x(m) = Cells(12 + skaitsL + m, 10).Value
+'                 n = n + 1
+'                 ReDim Preserve F_x(1 To skaitsS + n)
+'                 F_x(skaitsS + n) = Cells(12 + skaitsL + m, 13).Value
+'         End Select
+'     Next m
 
-    'saliek visus punktus vienā matricā
-    ReDim xtemp(1 To UBound(F_x, 1) + UBound(l_e, 1))
-    ReDim x(1 To UBound(F_x, 1) + UBound(l_e, 1))
-    n = 0
-    For m = 1 To UBound(l_e, 1)
-        xtemp(m) = l_e(m)
-    Next m
-    For m = UBound(l_e, 1) + 1 To UBound(xtemp, 1)
-        n = n + 1
-        xtemp(m) = F_x(n)
-    Next m
+'     'saliek visus punktus vienā matricā
+'     ReDim xtemp(1 To UBound(F_x, 1) + UBound(l_e, 1))
+'     ReDim x(1 To UBound(F_x, 1) + UBound(l_e, 1))
+'     n = 0
+'     For m = 1 To UBound(l_e, 1)
+'         xtemp(m) = l_e(m)
+'     Next m
+'     For m = UBound(l_e, 1) + 1 To UBound(xtemp, 1)
+'         n = n + 1
+'         xtemp(m) = F_x(n)
+'     Next m
     
-    'sašķiro matricas elementus no mazākā uz lielāko
-    Call QuickSort(xtemp, LBound(xtemp), UBound(xtemp))
+'     'sašķiro matricas elementus no mazākā uz lielāko
+'     Call QuickSort(xtemp, LBound(xtemp), UBound(xtemp))
     
-    'izņem no matricas vienādos elementus
-    n = 0
-    For m = 1 To UBound(xtemp, 1) - 1
-        If m = UBound(xtemp, 1) - 1 And xtemp(m) <> xtemp(m + 1) Then
-            n = n + 1
-            x(n) = xtemp(m)
-            x(n + 1) = xtemp(m + 1)
-        ElseIf m = UBound(xtemp, 1) - 1 And xtemp(m) = xtemp(m + 1) Then
-            x(n + 1) = xtemp(m)
-        ElseIf xtemp(m) <> xtemp(m + 1) Then
-            n = n + 1
-            x(n) = xtemp(m)
-        End If
-    Next m
-    ReDim Preserve x(1 To n + 1)
+'     'izņem no matricas vienādos elementus
+'     n = 0
+'     For m = 1 To UBound(xtemp, 1) - 1
+'         If m = UBound(xtemp, 1) - 1 And xtemp(m) <> xtemp(m + 1) Then
+'             n = n + 1
+'             x(n) = xtemp(m)
+'             x(n + 1) = xtemp(m + 1)
+'         ElseIf m = UBound(xtemp, 1) - 1 And xtemp(m) = xtemp(m + 1) Then
+'             x(n + 1) = xtemp(m)
+'         ElseIf xtemp(m) <> xtemp(m + 1) Then
+'             n = n + 1
+'             x(n) = xtemp(m)
+'         End If
+'     Next m
+'     ReDim Preserve x(1 To n + 1)
 
-    'izveido globālo stinguma matricu
-    a = 0
-    ReDim K(1 To 2 * UBound(x, 1), 1 To 2 * UBound(x, 1))
-    ReDim stiffK(1 To UBound(K, 1), 1 To UBound(K, 2))
-    For m = 1 To UBound(x, 1) - 1
-        L = x(m + 1) - x(m)
-        k_e = EulerBernoulli(L)
-        S = E * I / L ^ 3
-        For n = 1 To 4
-            For j = 1 To 4
-              K(n + a, j + a) = K(n + a, j + a) + S * k_e(n, j)
-              stiffK(n + a, j + a) = stiffK(n + a, j + a) + S * k_e(n, j)
-            Next j
-        Next n
-        a = a + 2
-    Next m
+'     'izveido globālo stinguma matricu
+'     a = 0
+'     ReDim K(1 To 2 * UBound(x, 1), 1 To 2 * UBound(x, 1))
+'     ReDim stiffK(1 To UBound(K, 1), 1 To UBound(K, 2))
+'     For m = 1 To UBound(x, 1) - 1
+'         L = x(m + 1) - x(m)
+'         k_e = EulerBernoulli(L)
+'         S = E * I / L ^ 3
+'         For n = 1 To 4
+'             For j = 1 To 4
+'               K(n + a, j + a) = K(n + a, j + a) + S * k_e(n, j)
+'               stiffK(n + a, j + a) = stiffK(n + a, j + a) + S * k_e(n, j)
+'             Next j
+'         Next n
+'         a = a + 2
+'     Next m
     
-    'Robežnosacījumu pielikšana
-    ReDim FBcs(1 To UBound(K, 1), 1 To 1)
-    For a = 0 To skaitsL
-        balstijums = Cells(9 + a, 10).Value
-        If a = 0 Then
-            x1 = 0
-        Else: x1 = x1 + Cells(8 + a, 13).Value
-        End If
-        Select Case balstijums
-            Case "Brivi balstits"
-                For m = 1 To UBound(x, 1)
-                    If x1 = x(m) Then
-                        For n = 1 To UBound(K, 1)
-                            K(2 * m - 1, n) = 0
-                        Next n
-                        K(2 * m - 1, 2 * m - 1) = 1
-                        FBcs(2 * m - 1, 1) = "BCS"
-                    End If
-                Next m
-            Case "Iespilejums"
-                For m = 1 To UBound(x, 1)
-                    If x1 = x(m) Then
-                        For n = 1 To UBound(K, 1)
-                            K(2 * m - 1, n) = 0
-                            K(2 * m, n) = 0
-                        Next n
-                         K(2 * m - 1, 2 * m - 1) = 1
-                         K(2 * m, 2 * m) = 1
-                         FBcs(2 * m - 1, 1) = "BCS"
-                         FBcs(2 * m, 1) = "BCS"
-                    End If
-                Next m
-        End Select
-    Next a
+'     'Robežnosacījumu pielikšana
+'     ReDim FBcs(1 To UBound(K, 1), 1 To 1)
+'     For a = 0 To skaitsL
+'         balstijums = Cells(9 + a, 10).Value
+'         If a = 0 Then
+'             x1 = 0
+'         Else: x1 = x1 + Cells(8 + a, 13).Value
+'         End If
+'         Select Case balstijums
+'             Case "Brivi balstits"
+'                 For m = 1 To UBound(x, 1)
+'                     If x1 = x(m) Then
+'                         For n = 1 To UBound(K, 1)
+'                             K(2 * m - 1, n) = 0
+'                         Next n
+'                         K(2 * m - 1, 2 * m - 1) = 1
+'                         FBcs(2 * m - 1, 1) = "BCS"
+'                     End If
+'                 Next m
+'             Case "Iespilejums"
+'                 For m = 1 To UBound(x, 1)
+'                     If x1 = x(m) Then
+'                         For n = 1 To UBound(K, 1)
+'                             K(2 * m - 1, n) = 0
+'                             K(2 * m, n) = 0
+'                         Next n
+'                          K(2 * m - 1, 2 * m - 1) = 1
+'                          K(2 * m, 2 * m) = 1
+'                          FBcs(2 * m - 1, 1) = "BCS"
+'                          FBcs(2 * m, 1) = "BCS"
+'                     End If
+'                 Next m
+'         End Select
+'     Next a
 
-    'Tukšajās vietās ievieto "0"
-    For m = 1 To UBound(K, 1)
-        For n = 1 To UBound(K, 2)
-            If IsEmpty(K(m, n)) Then K(m, n) = 0
-            If IsEmpty(stiffK(m, n)) Then stiffK(m, n) = 0
-        Next n
-    Next m
+'     'Tukšajās vietās ievieto "0"
+'     For m = 1 To UBound(K, 1)
+'         For n = 1 To UBound(K, 2)
+'             If IsEmpty(K(m, n)) Then K(m, n) = 0
+'             If IsEmpty(stiffK(m, n)) Then stiffK(m, n) = 0
+'         Next n
+'     Next m
       
     'Inversā matrica un atrisinājums ar pārvietojumu matricu
     invK = WorksheetFunction.MInverse(K)
@@ -187,6 +187,7 @@ Sub sijaGEM()
         Next m
         
         tempd = WorksheetFunction.MMult(invK, F)
+        
         For m = 1 To UBound(tempd, 1)
             d(a, m) = tempd(m, 1)
         Next m
@@ -274,7 +275,7 @@ Sub sijaGEM()
         n = n + 2
     Next m
 '
-    Worksheets(2).UsedRange.ClearContents
+    ' Worksheets(2).UsedRange.ClearContents
 '    For m = 1 To UBound(u, 1)
 '        Worksheets(2).Cells(5 + m, 3).Value = u_x(m)
 '        Worksheets(2).Cells(5 + m, 5).Value = u(m)
@@ -290,27 +291,27 @@ Sub sijaGEM()
 '        Next n
 '    Next m
     
-    For m = 1 To UBound(u_x, 1)
-        Worksheets(2).Cells(m, 1).Value = u_x(m)
-    Next m
+'     For m = 1 To UBound(u_x, 1)
+'         Worksheets(2).Cells(m, 1).Value = u_x(m)
+'     Next m
     
-    For m = 1 To skaitsS
-        For n = 1 To UBound(u, 2)
-            Worksheets(2).Cells(n, 2).Value = Worksheets(2).Cells(n, 2).Value + u(m, n)
-        Next n
-    Next m
+'     For m = 1 To skaitsS
+'         For n = 1 To UBound(u, 2)
+'             Worksheets(2).Cells(n, 2).Value = Worksheets(2).Cells(n, 2).Value + u(m, n)
+'         Next n
+'     Next m
     
-    For m = 1 To UBound(koordVx, 1)
-        Worksheets(2).Cells(m, 5).Value = koordVx(m, 1)
-    Next m
+'     For m = 1 To UBound(koordVx, 1)
+'         Worksheets(2).Cells(m, 5).Value = koordVx(m, 1)
+'     Next m
 
-    For m = 1 To skaitsS
-        For n = 1 To UBound(V_x, 2)
-            Worksheets(2).Cells(n, 6).Value = Worksheets(2).Cells(n, 6).Value + V_x(m, n) / 10 ^ 3
-            Worksheets(2).Cells(n, 7).Value = Worksheets(2).Cells(n, 7).Value + M_x(m, n) / 10 ^ 6
-        Next n
-    Next m
-'
+'     For m = 1 To skaitsS
+'         For n = 1 To UBound(V_x, 2)
+'             Worksheets(2).Cells(n, 6).Value = Worksheets(2).Cells(n, 6).Value + V_x(m, n) / 10 ^ 3
+'             Worksheets(2).Cells(n, 7).Value = Worksheets(2).Cells(n, 7).Value + M_x(m, n) / 10 ^ 6
+'         Next n
+'     Next m
+' '
 '    For m = 1 To UBound(V_x, 1)
 '        Worksheets(2).Cells(5 + m, 12).Value = koordVx(m, 1)
 '        Worksheets(2).Cells(5 + m, 13).Value = V_x(m) * 10 ^ -3
@@ -323,38 +324,38 @@ Sub sijaGEM()
 
 End Sub
 
-Sub QuickSort(arr, Lo As Long, Hi As Long)
-  Dim varPivot As Variant
-  Dim varTmp As Variant
-  Dim tmpLow As Long
-  Dim tmpHi As Long
-  tmpLow = Lo
-  tmpHi = Hi
-  varPivot = arr((Lo + Hi) \ 2)
-  Do While tmpLow <= tmpHi
-    Do While arr(tmpLow) < varPivot And tmpLow < Hi
-      tmpLow = tmpLow + 1
-    Loop
-    Do While varPivot < arr(tmpHi) And tmpHi > Lo
-      tmpHi = tmpHi - 1
-    Loop
-    If tmpLow <= tmpHi Then
-      varTmp = arr(tmpLow)
-      arr(tmpLow) = arr(tmpHi)
-      arr(tmpHi) = varTmp
-      tmpLow = tmpLow + 1
-      tmpHi = tmpHi - 1
-    End If
-  Loop
-  If Lo < tmpHi Then QuickSort arr, Lo, tmpHi
-  If tmpLow < Hi Then QuickSort arr, tmpLow, Hi
-End Sub
+' Sub QuickSort(arr, Lo As Long, Hi As Long)
+'   Dim varPivot As Variant
+'   Dim varTmp As Variant
+'   Dim tmpLow As Long
+'   Dim tmpHi As Long
+'   tmpLow = Lo
+'   tmpHi = Hi
+'   varPivot = arr((Lo + Hi) \ 2)
+'   Do While tmpLow <= tmpHi
+'     Do While arr(tmpLow) < varPivot And tmpLow < Hi
+'       tmpLow = tmpLow + 1
+'     Loop
+'     Do While varPivot < arr(tmpHi) And tmpHi > Lo
+'       tmpHi = tmpHi - 1
+'     Loop
+'     If tmpLow <= tmpHi Then
+'       varTmp = arr(tmpLow)
+'       arr(tmpLow) = arr(tmpHi)
+'       arr(tmpHi) = varTmp
+'       tmpLow = tmpLow + 1
+'       tmpHi = tmpHi - 1
+'     End If
+'   Loop
+'   If Lo < tmpHi Then QuickSort arr, Lo, tmpHi
+'   If tmpLow < Hi Then QuickSort arr, tmpLow, Hi
+' End Sub
 
-Function EulerBernoulli(Le) As Variant
-    Dim kLoc(1 To 4, 1 To 4) As Double
-    kLoc(1, 1) = 12:         kLoc(1, 2) = 6 * Le:        kLoc(1, 3) = -12:         kLoc(1, 4) = 6 * Le
-    kLoc(2, 1) = 6 * Le:     kLoc(2, 2) = 4 * Le ^ 2:    kLoc(2, 3) = -6 * Le:     kLoc(2, 4) = 2 * Le ^ 2
-    kLoc(3, 1) = -12:        kLoc(3, 2) = -6 * Le:       kLoc(3, 3) = 12:          kLoc(3, 4) = -6 * Le
-    kLoc(4, 1) = 6 * Le:     kLoc(4, 2) = 2 * Le ^ 2:    kLoc(4, 3) = -6 * Le:     kLoc(4, 4) = 4 * Le ^ 2
-    EulerBernoulli = kLoc
-End Function
+' Function EulerBernoulli(Le) As Variant
+'     Dim kLoc(1 To 4, 1 To 4) As Double
+'     kLoc(1, 1) = 12:         kLoc(1, 2) = 6 * Le:        kLoc(1, 3) = -12:         kLoc(1, 4) = 6 * Le
+'     kLoc(2, 1) = 6 * Le:     kLoc(2, 2) = 4 * Le ^ 2:    kLoc(2, 3) = -6 * Le:     kLoc(2, 4) = 2 * Le ^ 2
+'     kLoc(3, 1) = -12:        kLoc(3, 2) = -6 * Le:       kLoc(3, 3) = 12:          kLoc(3, 4) = -6 * Le
+'     kLoc(4, 1) = 6 * Le:     kLoc(4, 2) = 2 * Le ^ 2:    kLoc(4, 3) = -6 * Le:     kLoc(4, 4) = 4 * Le ^ 2
+'     EulerBernoulli = kLoc
+' End Function

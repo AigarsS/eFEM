@@ -5,13 +5,16 @@
 
 class PointLoad
 {
-public:
-    std::string name;
-    int coordX;
-    double value;
+    private:
+        std::string name;
+        int coordX;
+        double value;
 
-    PointLoad(std::string name, int coordX, double value);
-    ~PointLoad();
+    public:
+        PointLoad(std::string name, int coordX, double value);
+        ~PointLoad();
+        int getCoordX();
+        double getLoadValue();
 };
 
 #endif

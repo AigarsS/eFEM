@@ -8,7 +8,7 @@
 			"args": [
 				"-g",
 				"-I${workspaceFolder}\\include\\eigen",
-				"${file}", "C:\\Users\\Aigars\\Desktop\\CPP\\KD\\EulerBernoulli.cpp",
+				"${file}", "${workspaceFolder}\\EulerBernoulli.cpp", "${workspaceFolder}\\PointLoad.cpp",
 				"-o",
 				"${fileDirname}\\${fileBasenameNoExtension}.exe",
 			],

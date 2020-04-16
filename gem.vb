@@ -139,10 +139,10 @@
     ReDim F0(1 To skaitsS, 1 To UBound(K, 1))
     ReDim M0(1 To skaitsS, 1 To UBound(K, 1))
     For a = 1 To skaitsS
-        slodzesTips = Cells(12 + skaitsL + a, 4).Value
-        For m = 1 To UBound(F, 1)
-            F(m, 1) = 0
-        Next m
+        ' slodzesTips = Cells(12 + skaitsL + a, 4).Value
+        ' For m = 1 To UBound(F, 1)
+        '     F(m, 1) = 0
+        ' Next m
         Select Case slodzesTips
             Case "Punktveida"
                 tempF = Cells(12 + skaitsL + a, 7).Value
@@ -160,26 +160,26 @@
                     End If
                 Next m
             Case "Linijveida"
-                tempF = Cells(12 + skaitsL + a, 7).Value
-                x1 = Cells(12 + skaitsL + a, 10).Value
-                x2 = Cells(12 + skaitsL + a, 13).Value
-                For m = 1 To UBound(x, 1) - 1
-                    If x(m) >= x1 And x(m) < x2 Then
-                        F(m * 2 - 1, 1) = F(m * 2 - 1, 1) - tempF * (x(m + 1) - x(m)) / 2
-                        F(m * 2, 1) = F(m * 2, 1) - tempF * (x(m + 1) - x(m)) ^ 2 / 12
-                        F(m * 2 + 1, 1) = F(m * 2 + 1, 1) - tempF * (x(m + 1) - x(m)) / 2
-                        F(m * 2 + 2, 1) = F(m * 2 + 2, 1) + tempF * (x(m + 1) - x(m)) ^ 2 / 12
-                    End If
-                Next m
+                ' tempF = Cells(12 + skaitsL + a, 7).Value
+                ' x1 = Cells(12 + skaitsL + a, 10).Value
+                ' x2 = Cells(12 + skaitsL + a, 13).Value
+                ' For m = 1 To UBound(x, 1) - 1
+                '     If x(m) >= x1 And x(m) < x2 Then
+                '         F(m * 2 - 1, 1) = F(m * 2 - 1, 1) - tempF * (x(m + 1) - x(m)) / 2
+                '         F(m * 2, 1) = F(m * 2, 1) - tempF * (x(m + 1) - x(m)) ^ 2 / 12
+                '         F(m * 2 + 1, 1) = F(m * 2 + 1, 1) - tempF * (x(m + 1) - x(m)) / 2
+                '         F(m * 2 + 2, 1) = F(m * 2 + 2, 1) + tempF * (x(m + 1) - x(m)) ^ 2 / 12
+                '     End If
+                ' Next m
                 
-                For m = 1 To UBound(x, 1) - 1
-                    If x(m) >= x1 And x(m) < x2 Then
-                        F0(a, m * 2 - 1) = -tempF * (x(m + 1) - x(m)) / 2
-                        F0(a, m * 2) = -tempF * (x(m + 1) - x(m)) / 2
-                        M0(a, m * 2 - 1) = -tempF * (x(m + 1) - x(m)) ^ 2 / 12
-                        M0(a, m * 2) = tempF * (x(m + 1) - x(m)) ^ 2 / 12
-                    End If
-                Next m
+                ' For m = 1 To UBound(x, 1) - 1
+                '     If x(m) >= x1 And x(m) < x2 Then
+                '         F0(a, m * 2 - 1) = -tempF * (x(m + 1) - x(m)) / 2
+                '         F0(a, m * 2) = -tempF * (x(m + 1) - x(m)) / 2
+                '         M0(a, m * 2 - 1) = -tempF * (x(m + 1) - x(m)) ^ 2 / 12
+                '         M0(a, m * 2) = tempF * (x(m + 1) - x(m)) ^ 2 / 12
+                '     End If
+                ' Next m
         End Select
 
         For m = 1 To UBound(F, 1)
@@ -187,7 +187,7 @@
         Next m
         
         tempd = WorksheetFunction.MMult(invK, F)
-        
+
         For m = 1 To UBound(tempd, 1)
             d(a, m) = tempd(m, 1)
         Next m

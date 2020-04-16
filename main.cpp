@@ -1,7 +1,9 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include "EulerBernoulli.h"
+#include "PointLoad.h"
 #include <fstream>
+#include <vector> 
  
 using namespace Eigen;
 using namespace std;
@@ -14,6 +16,11 @@ int main()
 {
   int spanCount=2;
   // int spanLenght=5000; 
+
+
+  std::vector<PointLoad> pointLoads;
+  PointLoad f1("F1", 2570, 5000);
+  pointLoads.push_back(f1);
   
 
   //Matrix for mapping support coordinates to support type enum (Hinge/RIGID)
@@ -43,10 +50,11 @@ int main()
   int forcePoint = 2500;
 
   //Vector for storing X coordinates - element end points
-  VectorXd dx(spanCount*10 + 1);
+  VectorXd dx(spanCount*10 + pointLoads.size());
 
   //Number of elements per beam
   int elemsPerBeam = 10;
+
   //span is divided into 10 parts - but maybe this can be avoided?
   dx(0) = 0;
   int current = 0;
@@ -59,15 +67,18 @@ int main()
 
   //resizing vector and adding node coordinate for the force applied (2500mm in this case) to the end of the vector
   //node is added to vector only if value is not already found in the vector
-  for (int i=0; i<dx.size(); i++){
-    if (dx(i) == forcePoint){
-      flag = true;
-    }
+  for(int i=0; i<pointLoads.size(); i++){
+      for (int j=0; j<dx.size(); j++){
+        if (dx(j) == pointLoads[i].getCoordX()){
+          flag = true;
+        }
+      }
+      if (!flag){
+        dx.resize(dx.size()+1);
+        dx(dx.size()-1) = pointLoads[i].getCoordX();
+      }
   }
-  if (!flag){
-    dx.resize(dx.size()+1);
-    dx(dx.size()-1) = forcePoint;
-  }
+  
   
   //Sorting vector - so that added node values are in ascending order
   sort(dx.begin(), dx.end());
@@ -108,7 +119,7 @@ int main()
                   K.row(2*j).setZero();
                   K.row(2*j+1).setZero();
                   K(2*j, 2*j) = 1;
-                  K(2*j+1, 2*j+1) = 1;
+                  K(2*j+1, 2*j+1) = 1;  
                   FBcs(2*j) = 1;
                   break;
 
@@ -124,13 +135,23 @@ int main()
   //Inverse of the matrix
   // MatrixXd invK = K.inverse();
 
+
+  //Load Vector
+  VectorXd F = VectorXd::Zero(K.rows());
+  for(int i=0; i<pointLoads.size(); i++){
+    for(int j=0; j< dx.size(); j++){
+        if(pointLoads[i].getCoordX() == dx(j)){
+          F(2*j) = pointLoads[i].getLoadValue();  
+        } 
+    }  
+  }
+
   ofstream file("matrix.txt");
 
   if (file.is_open())
   {
-    
+    // file << "m" << '\n' <<  K << '\n';
     file << "m" << '\n' <<  K << '\n';
-    // file << "m" << '\n' <<  dx << '\n';
   }
 
   // double elemLength = 2;

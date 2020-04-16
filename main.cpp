@@ -14,12 +14,12 @@ enum Support {HINGE, RIGID};
 int main()
 
 {
-  int spanCount=2;
+  int spanCount=1;
   // int spanLenght=5000; 
 
 
   std::vector<PointLoad> pointLoads;
-  PointLoad f1("F1", 2570, 5000);
+  PointLoad f1("F1", 2500, 5000);
   pointLoads.push_back(f1);
   
 
@@ -28,8 +28,8 @@ int main()
   
   //For testing purposes hardcoded values are set
   supports << 0,    0,
-              5000, 0,
-              7500, 1;
+              5000, 1;
+              // 7500, 1;
 
   
   bool flag = false;
@@ -138,6 +138,7 @@ int main()
 
   //Load Vector
   VectorXd F = VectorXd::Zero(K.rows());
+
   for(int i=0; i<pointLoads.size(); i++){
     for(int j=0; j< dx.size(); j++){
         if(pointLoads[i].getCoordX() == dx(j)){
@@ -146,12 +147,14 @@ int main()
     }  
   }
 
+  MatrixXd result = K.inverse() * F;
+
   ofstream file("matrix.txt");
 
   if (file.is_open())
   {
     // file << "m" << '\n' <<  K << '\n';
-    file << "m" << '\n' <<  K << '\n';
+    file << "m" << '\n' <<  result << '\n';
   }
 
   // double elemLength = 2;

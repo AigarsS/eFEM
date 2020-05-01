@@ -212,6 +212,9 @@
             For b = 1 To skaitsS
                 u(b, a) = N1 * d(b, 2 * m - 3) + N2 * d(b, 2 * m - 2) + N3 * d(b, 2 * m - 1) + N4 * d(b, 2 * m)
             Next b
+
+
+            
             If x1 = 0 And m <> 2 Then
                 u_x(a) = x(m - 1) - x(1)
             ElseIf x1 = 0 And m = 2 Then
@@ -225,19 +228,23 @@
                 u_x(a) = u_x(a - 1) + mesh
             End If
             a = a + 1
+
+
             ReDim Preserve u_x(1 To a)
             ReDim Preserve u(1 To skaitsS, 1 To a)
-            If L - x1 < mesh And m = UBound(x, 1) Then
-                u_x(a) = u_x(a - 1) + (L - x1)
-                x1 = L
-                N1 = 1 / L ^ 3 * (2 * x1 ^ 3 - 3 * x1 ^ 2 * L + L ^ 3)
-                N2 = 1 / L ^ 3 * (x1 ^ 3 * L - 2 * x1 ^ 2 * L ^ 2 + x1 * L ^ 3)
-                N3 = 1 / L ^ 3 * (-2 * x1 ^ 3 + 3 * x1 ^ 2 * L)
-                N4 = 1 / L ^ 3 * (x1 ^ 3 * L - x1 ^ 2 * L ^ 2)
-                For b = 1 To skaitsS
-                    u(b, a) = N1 * d(b, 2 * m - 3) + N2 * d(b, 2 * m - 2) + N3 * d(b, 2 * m - 1) + N4 * d(b, 2 * m)
-                Next b
-            End If
+            ' If L - x1 < mesh And m = UBound(x, 1) Then
+            '     u_x(a) = u_x(a - 1) + (L - x1)
+            '     x1 = L
+            '     N1 = 1 / L ^ 3 * (2 * x1 ^ 3 - 3 * x1 ^ 2 * L + L ^ 3)
+            '     N2 = 1 / L ^ 3 * (x1 ^ 3 * L - 2 * x1 ^ 2 * L ^ 2 + x1 * L ^ 3)
+            '     N3 = 1 / L ^ 3 * (-2 * x1 ^ 3 + 3 * x1 ^ 2 * L)
+            '     N4 = 1 / L ^ 3 * (x1 ^ 3 * L - x1 ^ 2 * L ^ 2)
+            '     For b = 1 To skaitsS
+            '         u(b, a) = N1 * d(b, 2 * m - 3) + N2 * d(b, 2 * m - 2) + N3 * d(b, 2 * m - 1) + N4 * d(b, 2 * m)
+            '     Next b
+            ' End If
+
+
         Next x1
     Next m
     

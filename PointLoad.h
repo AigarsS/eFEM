@@ -1,7 +1,7 @@
 #ifndef POINTLOAD_H
 #define POINTLOAD_H
 
-#include <string>
+#include <iostream>
 
 class PointLoad
 {

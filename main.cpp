@@ -3,6 +3,7 @@
 #include <Eigen/Dense>
 #include "EulerBernoulli.h"
 #include "PointLoad.h"
+#include "ReadCsv.h"
 #include <fstream>
 #include <vector> 
  
@@ -13,53 +14,54 @@ using namespace std;
 enum Support {HINGE, RIGID};
  
 int main()
-
 {
+
+
+  /*
+    --------------------------------------------------------------------------------------------------------------
+    |                                    PREPROCESSING PHASE                                                     |
+    --------------------------------------------------------------------------------------------------------------
+  */
+
+  // Parameters for the beam section
+  int E = 0; 
+  int b = 0;
+  int h = 0;
+
+  ReadCsv preprocessorData("PREPROCESSOR.csv");
+  std::vector<int> beamData = preprocessorData.getData();
+  MatrixXd supports = preprocessorData.getSupports();
+  std::vector<PointLoad> pointLoads = preprocessorData.getPointLoads();
+
+  // Beam element properties are retrieved from beamData vector and assignec accordingly
+  // Correct sequence in beamData is expected
+  int n = 0;
+  for ( auto &i : beamData ) {
+    if ( n == 0){
+      E = i;
+    } else if ( n == 1){
+      b = i;
+    } else if ( n == 2){
+      h = i;
+    }
+    n++;
+  }
   
-  std::vector<PointLoad> pointLoads;
-  PointLoad f1("F1", 2500, 5000);
-  pointLoads.push_back(f1);
-  
-
-  //Matrix for mapping support coordinates to support type enum (Hinge/RIGID)
-  //For testing purposes hardcoded values are set
-  int spanCount=1;
-  MatrixXd supports(spanCount+1,2);
-  supports << 0,    0,
-              5000, 0;
-              // 7500, 1;
-
-  //Jungs modulus of the beam in N/mm2 - equivalent for wood
-  int E = 11000;
-
-  //parameters of the beam section
   // Second moment of area
-  int b = 50;
-  int h = 200;
   double I = (b * pow(h, 3))/12;
 
 
-  
-
-  //Number of elements per beam
-  // int elemsPerBeam = 10;
-
+  /*
+    --------------------------------------------------------------------------------------------------------------
+    |                                    SOLUTION PHASE                                                          |
+    --------------------------------------------------------------------------------------------------------------
+  */
+ 
   //Vector for storing X coordinates - element end points
   // VectorXd dx(spanCount*elemsPerBeam + pointLoads.size());
-   VectorXd dx(spanCount + pointLoads.size());
-
-  //span is divided into 10 parts - but maybe this can be avoided?
-  // dx(0) = 0;
-  // int current = 0;
-  // for (int i=0; i<supports.rows()-1; i++){
-  //   int spanLength = supports(i+1,0) - supports(i,0);
-  //   for (int j=1; j<=elemsPerBeam; j++){
-  //     dx(i*10+j)= dx(i*10+j-1) + spanLength/elemsPerBeam;
-  //   }
-  // }
-
+  VectorXd dx(supports.rows());
   for (int i=0; i<supports.rows(); i++){
-    dx(i) = supports(1, i);
+    dx(i) = supports(i, 0);
   }
 
   //resizing vector and adding node coordinate for the force applied (2500mm in this case) to the end of the vector
@@ -72,7 +74,7 @@ int main()
         }
       }
       if (!flag){
-        dx.resize(dx.size()+1);
+        dx.conservativeResize(dx.size()+1);
         dx(dx.size()-1) = pointLoads[i].getCoordX();
       }
   }
@@ -80,7 +82,8 @@ int main()
   //Sorting vector - so that added node values are in ascending order
   sort(dx.begin(), dx.end());
 
-  //Global stiffnes matrix
+  // Global stiffnes matrix is created in this loop according
+  // to Euler-Bernoulli beam bending 
   MatrixXd K = MatrixXd::Zero(dx.size()*2, dx.size()*2 );
   int delta = 0;
   for(int i=0; i < (dx.size()-1); i++){
@@ -98,6 +101,7 @@ int main()
   //vector for applied boundary conditions (maybe not necessary)
   VectorXd FBcs = VectorXd::Zero(K.rows());
 
+  // Boundary conditions are set for Gloabal stiffness matrix
   for(int i=0; i<supports.rows(); i++){
     int supportType = supports(i,1);
     for(int j=0; j< dx.size(); j++){
@@ -117,7 +121,6 @@ int main()
                   K(2*j+1, 2*j+1) = 1;  
                   FBcs(2*j) = 1;
                   break;
-
                 default:
                   break;
             }
@@ -125,29 +128,23 @@ int main()
     }
   }  
 
-  //Load Vector
-  VectorXd F = VectorXd::Zero(K.rows());
+  // Results matrix - displacements and rotation at d(x) points
+  // Results are calculated for each load case - so that
+  // principle of supperposition could be applied later for final displacements  
   MatrixXd result = MatrixXd::Zero(pointLoads.size(),K.rows());
-
-
-
   for(int i=0; i<pointLoads.size(); i++){
+    VectorXd F = VectorXd::Zero(K.rows());
     for(int j=0; j< dx.size(); j++){
         if(pointLoads[i].getCoordX() == dx(j)){
           F(2*j) -= pointLoads[i].getLoadValue();  
         } 
     }
-
     for(int j=0; j < F.size(); j++){
       if(FBcs(j) == 1) {
         F(j) = 0;
       }
     }
-
-    // Solution matrix is calculated for each loading case and stored in matrix
-    // Later with superposition principle this can be added together for final results
     MatrixXd tempResult = K.inverse() * F;  
-
     for(int j=0; j < tempResult.size(); j++){
         result(i, j) = tempResult(j);
     }
@@ -155,84 +152,71 @@ int main()
   }
 
 
-  //Result postprocessing
+  /*
+    --------------------------------------------------------------------------------------------------------------
+    |                                    POSTPROCESSING PHASE                                                    |
+    --------------------------------------------------------------------------------------------------------------
+  */
 
-  // The size of the mesh elements (not the count)
-  // Mesh is needed for results displaying
+  // The length of the mesh elements
+  // Mesh is needed for displaying results - to refine calculation points, set finer mesh (shorter elements)
   int mesh = 500;
   
-  //Displacement result vector
+  // Resultant displacement vector
   MatrixXd u = MatrixXd::Zero(pointLoads.size(),1);
+
+  // Coordinates for mesh points and corresponding result values
   VectorXd uX = VectorXd::Zero(1);
 
-  //counter
+  // This is result recovery from calculated displacements matrix - results (displacements) are retrieved for
+  // each mesh point
   int m =0;
-
-
   for(int i=1; i < (dx.size()); i++){
     double L = dx(i) - dx(i-1);
-    // cout << L << endl;
-
     for(int j=0; j < L; j+=mesh ) {
-          // cout << dx(i-1) + j << endl;
-          double n1 = 1 / pow(L, 3) * (2 * pow(j, 3) - 3 * pow(j, 2) * L + pow(L, 3));
-          double n2 = 1 / pow(L, 3) * (pow(j, 3) * L - 2 * pow(j, 2) * pow(L, 2) + j * pow(L, 3));
-          double n3 = 1 / pow(L, 3) * (-2 * pow(j, 3) + 3 * pow(j, 2) * L);
-          double n4 = 1 / pow(L, 3) * (pow(j, 3) * L - pow(j, 2) * pow(L, 2));
-          for (int k=0; k<pointLoads.size(); k++){
-            u(k, m) = n1 * result(k, 2 * (i+1) - 4) + n2 * result(k, 2 * (i+1) - 3) + n3 * result(k, 2 * (i+1) - 2) + n4 * result(k, 2 * (i+1) - 1);
-          }
-
-          uX(m) = dx(i-1) + j;
-
-          m++;
-          u.conservativeResize(pointLoads.size(),m+1); //resize(pointLoads.size(),m+1);
-          uX.conservativeResize(m+1);
+      double n1 = 1 / pow(L, 3) * (2 * pow(j, 3) - 3 * pow(j, 2) * L + pow(L, 3));
+      double n2 = 1 / pow(L, 3) * (pow(j, 3) * L - 2 * pow(j, 2) * pow(L, 2) + j * pow(L, 3));
+      double n3 = 1 / pow(L, 3) * (-2 * pow(j, 3) + 3 * pow(j, 2) * L);
+      double n4 = 1 / pow(L, 3) * (pow(j, 3) * L - pow(j, 2) * pow(L, 2));
+      for (int k=0; k<pointLoads.size(); k++){
+        u(k, m) = n1 * result(k, 2 * (i+1) - 4) + n2 * result(k, 2 * (i+1) - 3) + n3 * result(k, 2 * (i+1) - 2) + n4 * result(k, 2 * (i+1) - 1);
+      }
+      uX(m) = dx(i-1) + j;
+      m++;
+      u.conservativeResize(pointLoads.size(),m+1); 
+      uX.conservativeResize(m+1);
     }
-
     if ( i==(dx.size()-1)){
       uX(m) = dx(i);
     }
-    
- 
   }
-
-
-
 
   //Temporary solution for outputting files to txt document
 
   ofstream file("matrix.txt");
-  // file.open("matrix.txt", ios::out | ios::app);
-
   if (file.is_open())
   {
-    // file << "m" << '\n' <<  K << '\n';
     for (int i=0; i<u.cols(); i++){
       file << uX(i) << "\t";
+      file << u(1, i) << "\t";
       file << u(0, i) << endl;
     }
   }
 
   // plotting graph
-  FILE* pipe = _popen("C:/\"Program Files\"/gnuplot/bin/gnuplot.exe", "w");
-    if (pipe != NULL)
-    {
-        fprintf(pipe, "set term win\n");
-        fprintf(pipe, "set style line 1 lt 1 lw 3 pt 3 linecolor rgb \"red\"\n");
+  // FILE* pipe = _popen("C:/\"Program Files\"/gnuplot/bin/gnuplot.exe", "w");
+  //   if (pipe != NULL)
+  //   {
+  //       fprintf(pipe, "set term win\n");
+  //       fprintf(pipe, "set style line 1 lt 1 lw 3 pt 3 linecolor rgb \"red\"\n");
         
-        fprintf(pipe, "plot \"matrix.txt\" with linespoints linestyle 1\n");
-        fprintf(pipe, "set term pngcairo\n");
-        fprintf(pipe, "set output \"myFile.png\"\n" );
-        fprintf(pipe, "replot\n");
-        fprintf(pipe, "set term win\n");
-        fflush(pipe);
-    }
-    else puts("Could not open the file\n");
-    _pclose(pipe);
-
-  double elemLength = 2;
-  cout << EulerBernoulli::getStiffnessMatrix(elemLength) << endl;
-  cout << "The size of the Global stiffness matrix is " << K.rows() << "x" << K.cols() << endl;
-  cout << K << endl;
+  //       fprintf(pipe, "plot \"matrix.txt\" with linespoints linestyle 1\n");
+  //       fprintf(pipe, "set term pngcairo\n");
+  //       fprintf(pipe, "set output \"myFile.png\"\n" );
+  //       fprintf(pipe, "replot\n");
+  //       fprintf(pipe, "set term win\n");
+  //       fflush(pipe);
+  //   }
+  //   else puts("Could not open the file\n");
+  //   _pclose(pipe);
 }

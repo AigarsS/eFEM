@@ -193,7 +193,7 @@ int main()
 
   //Temporary solution for outputting files to txt document
 
-  ofstream file("matrix.txt");
+  ofstream file("./results/results.txt");
   if (file.is_open())
   {
     for (int i=0; i<u.cols(); i++){

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector> 
 #include <Eigen/Dense>
-#include "PointLoad.h"
+#include "Load.h"
 
 
 using namespace Eigen;
@@ -14,14 +14,14 @@ class ReadCsv
 {
     private:
         std::vector<int> data;
-        std::vector<PointLoad> pointLoads;
+        std::vector<Load> loads;
         MatrixXd supports;
 
     public:
         ReadCsv(std::string fileName);
         ~ReadCsv();
         std::vector<int> getData();
-        std::vector<PointLoad> getPointLoads();
+        std::vector<Load> getLoads();
         MatrixXd getSupports();
 };
 

@@ -8,9 +8,9 @@
 			"args": [
 				"-g",
 				"-I${workspaceFolder}\\include\\eigen",
-				"${file}", "${workspaceFolder}\\EulerBernoulli.cpp", "${workspaceFolder}\\PointLoad.cpp", "${workspaceFolder}\\ReadCsv.cpp",
+				"${file}", "${workspaceFolder}\\EulerBernoulli.cpp", "${workspaceFolder}\\Load.cpp", "${workspaceFolder}\\ReadCsv.cpp",
 				"-o",
-				"${fileDirname}\\${fileBasenameNoExtension}.exe",
+				"${fileDirname}\\bin\\${fileBasenameNoExtension}.exe",
 			],
 			"options": {
 				"cwd": "C:\\MinGW\\bin"

@@ -1,16 +1,13 @@
 #;This is a preprocessing file for eFEM;;;;;;
 $MATERIAL;;;;;;;
-E;210000;N/MM2;;;;;
+E;11000;N/MM2;;;;;
 $SECTION;;;;;;;
-B;100;MM;;;;;
+B;50;MM;;;;;
 H;200;MM;;;;;
-$GEOMETRY;;SUPPORT COUNT;4;;;;
+$GEOMETRY;;SUPPORT COUNT;2;;;;
 #;coordX;support type;(0 - FREE, 1 - HINGE, 2 - RIGID);;;;Units for values!!!
 1;0;2;;;;;
-2;5000;1;;;;;
-3;10000;1;;;;;
-4;11000;0;;;;;
-$LOADS;;PLOAD COUNT;2;;;;
+2;5000;2;;;;;
+$LOADS;;PLOAD COUNT;1;;;;
 #;type (0 - POINT, 1 - LINE);coordX_begin;value_begin;coordX_end;value_end;;Units for values!!!
-1;1;0;500;5000;500;;
-2;0;11000;50000;0;0;;
+1;1;0;1;5000;1;;

@@ -18,11 +18,12 @@ class ReadCsv
         MatrixXd supports;
 
     public:
-        ReadCsv(std::string fileName);
+        ReadCsv();
         ~ReadCsv();
         std::vector<int> getData();
         std::vector<Load> getLoads();
         MatrixXd getSupports();
+        bool getInputs(std::string fileName);
 };
 
 #endif

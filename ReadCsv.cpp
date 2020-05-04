@@ -5,14 +5,20 @@
 // #include <cstdio>
 using namespace std;
 
-ReadCsv::ReadCsv(std::string fileName){
+ReadCsv::ReadCsv(){};
+ReadCsv::~ReadCsv(){};
+
+bool ReadCsv::getInputs(std::string fileName){
   string line, word;
   int supportCount = 0;
   int loadCount = 0;
-
   int match = 0;
 
   ifstream inputFile(fileName, ios::in);
+  if (!inputFile) {
+    cout << "Error while reading input file PREPROCESSOR.csv!" << endl;
+    return false;
+  }
 
   while ( getline(inputFile, line)){
     stringstream s(line);
@@ -27,7 +33,13 @@ ReadCsv::ReadCsv(std::string fileName){
       int i=0;
       while (getline(s, word, ';')){
         if (i == 3) {
-          supportCount = stoi(word);
+          try {
+            supportCount = stoi(word);
+          }
+          catch(std::invalid_argument& e){
+            cout << "PREPROCESSOR failure - you need to provide valid support count in the 4th column!" << endl;
+            return false;
+          }
           break;
         }
         i++;
@@ -38,7 +50,13 @@ ReadCsv::ReadCsv(std::string fileName){
       int i=0;
       while (getline(s, word, ';')){
         if (i == 3) {
-          loadCount = stoi(word);
+          try {
+            loadCount = stoi(word);
+          }
+          catch(std::invalid_argument& e){
+            cout << "PREPROCESSOR failure - you need to provide valid load count in the 4th column!" << endl;
+            return false;
+          }
           break;
         }
         i++;
@@ -53,9 +71,21 @@ ReadCsv::ReadCsv(std::string fileName){
       int supportType = 0;
       while (getline(s, word, ';')){
         if (i == 1) {
+          try {
           coordX = stoi(word);
+          }
+          catch(std::invalid_argument& e){
+            cout << "PREPROCESSOR failure - valid coordinates for the supports!" << endl;
+            return false;
+          }
         } else if (i == 2) {
-          supportType = stoi(word);
+          try {
+            supportType = stoi(word);
+          }
+          catch(std::invalid_argument& e){
+            cout << "PREPROCESSOR failure - valid support type!" << endl;
+            return false;
+          }
           break;
         }
         i++;
@@ -75,15 +105,45 @@ ReadCsv::ReadCsv(std::string fileName){
       int loadValue_1 = 0;
       while (getline(s, word, ';')){
         if (i == 1) {
-          loadType = stoi(word); 
+          try {
+            loadType = stoi(word);
+          }
+          catch(std::invalid_argument& e){
+            cout << "PREPROCESSOR failure - load type is not valid!" << endl;
+            return false;
+          }
         } else if (i == 2) {
-          coordX_0 = stoi(word);
+          try {
+            coordX_0 = stoi(word);
+          }
+          catch(std::invalid_argument& e){
+            cout << "PREPROCESSOR failure - coordX_0 value is not valid!" << endl;
+            return false;
+          }
         } else if (i == 3) {
-          loadValue_0 = stoi(word);
+          try {
+            loadValue_0 = stoi(word);
+          }
+          catch(std::invalid_argument& e){
+            cout << "PREPROCESSOR failure - load_0 value is not valid!" << endl;
+            return false;
+          }
         } else if (i == 4) {
-          coordX_1 = stoi(word);
+          try {
+            coordX_1 = stoi(word);
+          }
+          catch(std::invalid_argument& e){
+            cout << "PREPROCESSOR failure - coordX_1 value is not valid!" << endl;
+            return false;
+          }
         } else if (i == 5) {
-          loadValue_1 = stoi(word);
+          try {
+            loadValue_1 = stoi(word);
+          }
+          catch(std::invalid_argument& e){
+            cout << "PREPROCESSOR failure - load_1 value is not valid!" << endl;
+            return false;
+          }
         }
         i++;
       }
@@ -109,27 +169,42 @@ ReadCsv::ReadCsv(std::string fileName){
  
       switch (match) {
         case 1:
-          data.push_back(stoi(word));
+          try {
+            data.push_back(stoi(word));
+          }
+          catch(std::invalid_argument& e){
+            cout << "PREPROCESSOR failure - E value is not valid!" << endl;
+            return false;
+          }
           match = 0;
           break;
         case 2:
-         data.push_back(stoi(word));
+          try {
+            data.push_back(stoi(word));
+          }
+          catch(std::invalid_argument& e){
+            cout << "PREPROCESSOR failure - B value is not valid!" << endl;
+            return false;
+          }
           match = 0;
           break;
         case 3:
-          data.push_back(stoi(word));
+          try {
+            data.push_back(stoi(word));
+          }
+          catch(std::invalid_argument& e){
+            cout << "PREPROCESSOR failure - H value is not valid!" << endl;
+            return false;
+          }
           match = 0;
           break;
         default:
           break;
       }
     }
-
   }
-
-};
-
-ReadCsv::~ReadCsv(){};
+  return true;
+}
 
 std::vector<int> ReadCsv::getData(){
     return data;

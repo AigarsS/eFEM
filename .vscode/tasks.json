@@ -1,25 +1,30 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "shell",
-			"label": "C/C++: g++.exe build active file",
-			"command": "C:\\MinGW\\bin\\g++.exe",
-			"args": [
-				"-g",
-				"-I${workspaceFolder}\\include\\eigen",
-				"${file}", "${workspaceFolder}\\EulerBernoulli.cpp", "${workspaceFolder}\\Load.cpp", "${workspaceFolder}\\ReadCsv.cpp",
-				"-o",
-				"${fileDirname}\\bin\\${fileBasenameNoExtension}.exe",
-			],
-			"options": {
-				"cwd": "C:\\MinGW\\bin"
-			},
-			"problemMatcher": [
-				"$gcc"
-			],
-			"group": "build"
-		}
-		
-	]
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "g++ build active file",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-g",
+                "-I${workspaceFolder}/include/eigen",
+                "${file}",
+                "${workspaceFolder}/EulerBernoulli.cpp",
+                "${workspaceFolder}/Load.cpp",
+                "${workspaceFolder}/ReadCsv.cpp",
+                "-o",
+                "${fileDirname}/bin/${fileBasenameNoExtension}"
+            ],
+            "options": {
+                "cwd": "/usr/bin"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
 }

@@ -339,6 +339,7 @@ int main()
 
   if (answer == 'Y' || answer == 'y'){
     //plotting graph
+    #ifdef _WIN32
     FILE* pipe = _popen("C:/\"Program Files\"/gnuplot/bin/gnuplot.exe", "w");
       if (pipe != NULL)
       {
@@ -366,6 +367,37 @@ int main()
       }
       else puts("Could not open the file\n");
       _pclose(pipe);
+    #endif
+
+    #ifdef linux
+    FILE* pipe = popen("gnuplot", "w");
+      if (pipe != NULL)
+      {
+          fprintf(pipe, "set term wxt\n");
+          fprintf(pipe, "plot \"./results/results-deflection.txt\" with filledcurves y1=0 fs transparent lt rgb \"red\" notitle\n");
+          fprintf(pipe, "set term pngcairo\n");
+          fprintf(pipe, "set output \"./results/deflection.png\"\n" );
+          fprintf(pipe, "replot\n");
+          fprintf(pipe, "set term wxt\n");
+          fflush(pipe);
+
+          fprintf(pipe, "plot \"./results/results-Vx.txt\" with filledcurves y1=0 fs transparent lt rgb \"blue\" notitle \n");
+          fprintf(pipe, "set term pngcairo\n");
+          fprintf(pipe, "set output \"./results/Vx.png\"\n" );
+          fprintf(pipe, "replot\n");
+          fprintf(pipe, "set term wxt\n");
+          fflush(pipe);
+
+          fprintf(pipe, "plot \"./results/results-Mx.txt\" with filledcurves y1=0 fs transparent lt rgb \"green\" notitle\n");
+          fprintf(pipe, "set term pngcairo\n");
+          fprintf(pipe, "set output \"./results/Mx.png\"\n" );
+          fprintf(pipe, "replot\n");
+          fprintf(pipe, "set term wxt\n");
+          fflush(pipe);
+      }
+      else puts("Could not open the file\n");
+          pclose(pipe);
+    #endif
   }
 
 
